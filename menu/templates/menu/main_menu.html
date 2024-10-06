@@ -1,0 +1,24 @@
+<p>{{ menu }}</p>
+<ul>
+{% for item in items %}
+{% with item.subitems as item_set %}
+    <li><a href="{{ item.uri }}">{{ item.name }}</a></li>
+    {% if item_set %}
+        <ul>
+        {% for i_item in item_set%}
+        {% with i_item.subitems as i_item_set %}
+            <li><a href="{{ i_item.uri }}">{{ i_item.name }}</a></li>
+            {% if i_item_set %}
+            <ul>
+            {% for ii_item in i_item_set %}
+                <li><a href="{{ ii_item.uri }}">{{ ii_item.name }}</a></li>
+            {% endfor %}
+            </ul>
+            {% endif %}
+        {% endwith %}
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+{% endfor %}
+</ul>
