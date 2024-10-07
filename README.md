@@ -24,6 +24,7 @@
 **Запуск проекта:**
 
 1) Клонируйте репозиторий: git clone https://github.com/annaputilovskaya/main_menu.git
-2) Установите зависимости: pip install -r requirements.txt
-3) Примените миграции: python manage.py migrate
-4) Загрузите фикстуры: python manage.py loaddata menu_data.json
+2) Создайте и активируйте виртуальное окружение
+3) Установите зависимости: pip install -r requirements.txt
+4) Примените миграции: python manage.py migrate
+5) Загрузите фикстуры: python manage.py loaddata menu_data.json
