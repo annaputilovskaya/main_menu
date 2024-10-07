@@ -3,27 +3,23 @@
 {% load menu_tags %}
 
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>
-            {% block title %}
-                Title
-            {% endblock %}
-        </title>
-        <link rel="stylesheet" href="{% static 'site_css/normalize.css' %}">
-        <link rel="stylesheet" href="{% static 'site_css/base.css' %}">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        Тестовое задание
+    </title>
+    {% block links %}
 
-        <link rel="stylesheet" href="{% static 'menu_css/menu-styles.css' %}">
-        <script src="{% static 'menu_scripts/menu-scripts.js' %}"></script>
-            {% block links %}
-                {# including menu_scripts and menu_css styles #}
-            {% endblock %}
-    </head>
-    <body>
-    <div class="container">
-        <div class="col-2">
-            {% draw_menu 'main_menu' %}
-        </div>
+    {% endblock %}
+</head>
+<body>
+<div class="container">
+    <div class="col-2">
+        {% draw_menu 'main_menu' %}
     </div>
-    </body>
+</div>
+{% block scripts %}
+
+{% endblock %}
+</body>
 </html>
