@@ -1,7 +1,7 @@
 from django import template
 
 from menu.models import MenuItem
-from menu.services import get_upper_subitems, get_uri
+from menu.services import get_subitems, get_uri
 
 register = template.Library()
 
@@ -24,58 +24,44 @@ def draw_menu(context, menu_name: str) -> dict:
 
     # Формируем список пунктов меню первого уровня и
     # определяем активный пункт меню.
+    all_items = []
     active_item = None
     nested_items = []
     result_items = []
-    for item in menu_items:
+    for i in menu_items:
         item_value = {
-            "id": item.id,
-            "name": item.name,
-            "uri": get_uri(item),
+            "id": i.id,
+            "name": i.name,
+            "uri": get_uri(i),
             "subitems": [],
-            "parent": item.parent,
+            "parent": i.parent,
+            "is_expanded": False,
+            "is_active": False,
         }
+        all_items.append(item_value)
 
-        if request_uri == item_value["uri"]:
-            active_item = item_value
+    for item in all_items:
+        if request_uri == item["uri"]:
+            item["is_active"] = True
+            item["is_expanded"] = True
+            active_item = item
             active_root = item
-            while active_root.parent:
-                active_root = active_root.parent
-        if not item_value["parent"]:
-            result_items.append(item_value)
+            while active_root["parent"]:
+                active_root = active_root["parent"]
+                active_root = list(
+                    filter(lambda x: x["id"] == active_root.id, all_items)
+                )[0]
+                active_root["is_expanded"] = True
+        if item["parent"]:
+            nested_items.append(item)
         else:
-            nested_items.append(item_value)
+            result_items.append(item)
 
     if active_item is None:
         return {"items": result_items, "menu": menu_name}
 
-    # Находим индекс корня активного элемента
-    active_root_item = [
-        item for item in result_items if item.get("id") == active_root.pk
-    ][0]
-    index = result_items.index(active_root_item)
-    print(index)
-
-    # Разворачиваем пункты меню выше корня активного элемента
-    if index > 0:
-        for i in range(index):
-            result_items[i]["subitems"] = list(
-                filter(lambda x: x["parent"].id == result_items[i]["id"], nested_items)
-            )
-            if result_items[i]["subitems"]:
-                get_upper_subitems(result_items[i]["subitems"], nested_items)
-
-    # # Разворачиваем пункты меню в корне активного элемента до активного элемента
-    # # и подпункты  активного элемента первого уровня вложенности
-    # if active_root_item["id"] != active_item["id"]:
-    #     active_root_item["subitems"] = list(
-    #         filter(lambda x: x["parent"].id == active_root_item["id"], nested_items)
-    #     )
-    #     if active_root_item["subitems"]:
-    #         get_subitems(active_root_item["subitems"], nested_items, active_item)
-    # else:
-    #     active_root_item["subitems"] = list(
-    #         filter(lambda x: x["parent"].id == active_root_item["id"], nested_items)
-    #     )
+    # Разворачиваем все подпункты меню выше активного пункта
+    # и подпукты первого уровня активного пункта меню
+    get_subitems(result_items, nested_items)
 
     return {"items": result_items, "menu": menu_name}
