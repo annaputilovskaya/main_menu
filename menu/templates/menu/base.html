@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+{% load static %}
+{% load menu_tags %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        Тестовое задание
+    </title>
+    {% block links %}
+
+    {% endblock %}
+</head>
+<body>
+<div class="container">
+    <div class="col-2">
+        {% draw_menu 'main_menu' %}
+    </div>
+</div>
+{% block scripts %}
+
+{% endblock %}
+</body>
+</html>

@@ -1,3 +1,9 @@
-from django.shortcuts import render
+from django.views.generic import TemplateView
 
-# Create your views here.
+
+class MainMenuView(TemplateView):
+    """
+    Контроллер для отображения главного меню сайта.
+    """
+
+    template_name = "menu/base.html"
